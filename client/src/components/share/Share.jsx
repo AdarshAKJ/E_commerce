@@ -25,16 +25,17 @@ const Share = () => {
 
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: async (newPost) => {
+  const mutation = useMutation(
+    (newPost) => {
       return makeRequest.post("/posts", newPost);
     },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
-  });
-
+    {
+      onSuccess: () => {
+        // Invalidate and refetch
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  );
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -50,7 +51,7 @@ const Share = () => {
       <div className="container">
         <div className="top">
           <div className="left">
-            <img src={currentUser.profilePic} alt="" />
+            <img src={currentUser.profilePic} alt={`${currentUser.name}'s profile`} />
             <input
               type="text"
               placeholder={`What's on your mind ${currentUser.name}?`}
